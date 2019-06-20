@@ -29,12 +29,6 @@ Luis Rosales   | A01280221 | Product Owner Proxy
 El stack de tecnologias se agrupa en dos partes. Tecnologias para front-end y tecnologias para back-end. Ambos grupos de tecnologias coexisten dentro del cloud service provider AWS.
 
 ### Stack de Tecnologías
-
-Front-End:
-* [JavaScript](https://www.javascript.com) - Lenguaje de programación interpretado.
-* [React](https://reactjs.org) - Una biblioteca de JavaScript para construir interfaces de usuario
-* [Node.js](https://nodejs.org/es/) - Un entorno de ejecución para JavaScript construido con el motor de JavaScript V8 de Chrome.
-
 Back-End:
 * [Python](https://www.python.org) - Lenguaje de programación interpretado cuya filosofía hace hincapié en una sintaxis que favorezca un código legible.
 
@@ -50,78 +44,54 @@ cd NOMBRE_DE_DIRECTORIO
 
 Clonar el repositorio
 ```
-git clone https://github.com/ProyectoIntegrador2018/autoservicio-cartas.git
+git clone https://github.com/ProyectoIntegrador2018/autoservicio-cartas-back.git
 ```
-
-Pasos para instalar dependencias de proyecto Front-End:
-
-Instalar dependencias con npm
-```
-npm install
-```
-
-Las librerias que se instalan son:
-* ant-desing-pro
-* antd
-* fetch-http-client
-* react-router-dom
-* universal-cookie
 
 Pasos para instalar dependencias de proyecto Back-End:
 
+Create a virtual environment for your project
+
+```sh
+$ cd my-project
+$ virtualenv -p /usr/bin/python3.6 venv
+```
+
+Activate the virtual environment
+
+```sh
+$ source venv/bin/activate
+```
+
 Instalar Flask
 ```
-pip install -U Flask
+$ pip3 install -U Flask
 ```
 
 Instalar flask-cors
 ```
-pip install -U flask-cors
+$ pip3 install -U flask-cors
 ```
 
 Instalar PyMySQL
 ```
-pip install -U PyMySQL
+$ pip3 install -U PyMySQL
 ```
 
 Instalar status
 ```
-pip install -U status
+$ pip3 install -U status
 ```
 
 ### Ejecución del Proyecto
 
-Ejecución de proyecto Front-End
-```
-npm run start
-```
-
 Ejecucion de proyecto Back-End:
 ```
-python -m flask run
+$ python3 -m flask run
 ```
 
 ### Lanzamiento
 
-Pasos para lanzar proyecto Front-End a s3:
+Pasos para lanzar proyecto a EC2
 
-Crear paquete de aplicación en React.
-```
-npm run build
-```
 
-Sincornizar directorio de construcción con S3
-```
-aws s3 sync build/ s3://NOMBRE_DE_BALDE_DE_S3
-```
-
-Lanzamiento rapido invalidando caches.
-```
-npm run deploy
-```
-
-Pasos para lanzar proyecto Back-End:
-```
-serverless deploy
-```
 
