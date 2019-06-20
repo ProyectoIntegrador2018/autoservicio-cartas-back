@@ -29,8 +29,10 @@ Luis Rosales   | A01280221 | Product Owner Proxy
 El stack de tecnologias se agrupa en dos partes. Tecnologias para front-end y tecnologias para back-end. Ambos grupos de tecnologias coexisten dentro del cloud service provider AWS.
 
 ### Stack de Tecnologías
+
 Back-End:
 * [Python](https://www.python.org) - Lenguaje de programación interpretado cuya filosofía hace hincapié en una sintaxis que favorezca un código legible.
+* [Flask](http://flask.pocoo.org) - Framework minimalista escrito en Python que permite crear aplicaciones web rápidamente y con un mínimo número de líneas de código.
 
 Base de datos:
 * [MySQL](https://www.mysql.com) - Es un sistema de gestión de bases de datos relacional 
@@ -49,14 +51,14 @@ git clone https://github.com/ProyectoIntegrador2018/autoservicio-cartas-back.git
 
 Pasos para instalar dependencias de proyecto Back-End:
 
-Create a virtual environment for your project
+Crear ambiente virtual
 
 ```sh
 $ cd my-project
 $ virtualenv -p /usr/bin/python3.6 venv
 ```
 
-Activate the virtual environment
+Activar ambiente virtual
 
 ```sh
 $ source venv/bin/activate
