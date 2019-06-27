@@ -26,13 +26,13 @@ Luis Rosales   | A01280221 | Product Owner Proxy
 
 ## Desarrollo
 
-El stack de tecnologias se agrupa en dos partes. Tecnologias para front-end y tecnologias para back-end. Ambos grupos de tecnologias coexisten dentro del cloud service provider AWS.
+Consideraciones: En todo momento una vez que sea clonado el repositorio y la instalacion del viertul enviroment este hecha. SIEMPRE se deve trabar con el virtual enviroment encendido.
 
 ### Stack de Tecnologías
 
 Back-End:
 * [Python](https://www.python.org) - Lenguaje de programación interpretado cuya filosofía hace hincapié en una sintaxis que favorezca un código legible.
-* [Flask](http://flask.pocoo.org) - Framework minimalista escrito en Python que permite crear aplicaciones web rápidamente y con un mínimo número de líneas de código.
+* [Django](https://www.djangoproject.com) - Framework de desarrollo web de código abierto, escrito en Python.
 
 Base de datos:
 * [MySQL](https://www.mysql.com) - Es un sistema de gestión de bases de datos relacional 
@@ -51,55 +51,55 @@ git clone https://github.com/ProyectoIntegrador2018/autoservicio-cartas-back.git
 
 Pasos para instalar dependencias de proyecto Back-End:
 
-Instalar pipenv 
-
+Instalar virtualenv 
 ```sh
-$ brew install pipenv
+$ pip install virtualenv
 ```
 
 Crear ambiente virtual
-
 ```sh
-$ cd my-project
-$ virtualenv -p /usr/bin/python3.7 venv
+$ virtualenv -p /usr/bin/python3.6 venv
 ```
 
 Activar ambiente virtual
-
 ```sh
 $ source venv/bin/activate
 ```
 
-Instalar Flask
-```
-$ pip3 install -U Flask
+Instalar Django rest framework
+```sh
+$ pip install djangorestframework
 ```
 
-Instalar flask-cors
-```
-$ pip3 install -U flask-cors
+Instalar Django cors headers
+```sh
+$ pip install django-cors-headers
 ```
 
 Instalar PyMySQL
-```
-$ pip3 install -U PyMySQL
-```
-
-Instalar status
-```
-$ pip3 install -U status
+```sh
+$ pip install PyMySQL
 ```
 
 ### Ejecución del Proyecto
 
 Ejecucion de proyecto Back-End:
 ```
-$ python3 -m flask run
+$ python manage.py runserver
 ```
+
+### Posibles excepciones
+
+* [mysqlclient 1.3.13 or newer is required](https://stackoverflow.com/questions/55657752/django-installing-mysqlclient-error-mysqlclient-1-3-13-or-newer-is-required)
 
 ### Lanzamiento
 
-Pasos para lanzar proyecto a EC2
+Pasos para lanzar proyecto mediante Elastic Beanstalk
+
+* Crear zip del proyecto
+* Acceder a la consola de aws
+* Seleccionar el servicio de Elastic Beanstalk
+* Subir zip dando click en boton "Upload and Deploy"
 
 
 
