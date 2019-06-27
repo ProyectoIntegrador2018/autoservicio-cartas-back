@@ -51,11 +51,17 @@ git clone https://github.com/ProyectoIntegrador2018/autoservicio-cartas-back.git
 
 Pasos para instalar dependencias de proyecto Back-End:
 
+Instalar pipenv 
+
+```sh
+$ brew install pipenv
+```
+
 Crear ambiente virtual
 
 ```sh
 $ cd my-project
-$ virtualenv -p /usr/bin/python3.6 venv
+$ virtualenv -p /usr/bin/python3.7 venv
 ```
 
 Activar ambiente virtual
