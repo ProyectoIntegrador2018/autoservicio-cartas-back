@@ -8,7 +8,7 @@
 <body>
     <!-- Fecha y lugar -->
     <p style="text-align: right;">
-        <span style="font-size: 11.0pt;">Monterrey, N.L. a 19 de enero de 2017.</span>
+        <span style="font-size: 11.0pt;">Monterrey, N.L. a {{date}}.</span>
     </p>
     <p>
         <span style="font-size: 11.0pt;">&nbsp;</span>
@@ -25,7 +25,7 @@
         <br>
         <span style="font-size: 11.0pt;">Delegaci&oacute;n Federal en Nuevo Le&oacute;n.</span>
     </p>
-    
+
     <!-- Saludo -->
     <p style="text-align: justify; tab-stops: 307.5pt;">
         <span style="font-size: 11.0pt;">&nbsp;</span>
@@ -35,7 +35,7 @@
         <br><br>
         <span style="font-size: 11.0pt;">Reciban un cordial saludo.</span>
     </p>
-    
+
     <!-- Cuerpo -->
     <p style="text-align: justify;">
         <span style="font-size: 11.0pt;">Por medio de la presente me permito informarles que la solicitud de admisi&oacute;n del alumno(a) <strong>{{name}}</strong>, quien naci&oacute; el <strong>{{birthdate}}</strong>, de nacionalidad <strong>{{nationality}}</strong>, ha sido aceptada en este Instituto para cursar la carrera de <strong>{{career}}</strong> a partir del semestre de <strong>{{semester_initial_date}}</strong> y actualmente est&aacute; inscrito(a) y cursa su <strong>{{semester_in_progress}}</strong>. La matr&iacute;cula asignada es: <strong>{{enrollment}}.</strong></span>
@@ -52,7 +52,7 @@
     <p style="text-align: justify;">
         <span style="font-size: 11.0pt;">El costo para el semestre enero - mayo 2017 para los alumnos de carrera es de $</span> <span style="font-size: 11.0pt;">101,300.00 (ciento un mil trecientos pesos 00/100 M.N.) y el del seguro de gastos m&eacute;dicos mayores de $4,586.00 (cuatro mil quinientos ochenta y seis pesos 00/100 M.N.) en cobertura b&aacute;sica.</span>
     </p>
-    
+
     <!-- Despedida -->
     <p style="text-align: justify;">
         <span style="font-size: 11.0pt;">&nbsp;</span>
@@ -63,21 +63,28 @@
     <p style="text-align: justify;">
         <span style="font-size: 11.0pt;">Atentamente,</span>
     </p>
-    
+
     <!-- Datos Encargado -->
-    <p>
-        <img src="images/firma.png" height="60">
-        <br>
-        <span style="font-size: 12.0pt;">Lic. Sylvia Alvarado Gonz&aacute;lez</span>
-        <br>
-        <span style="font-size: 11.0pt;">(sylvia.alvarado.gonzalez@tec.mx)</span>
-        <br>
-        <span style="font-size: 11.0pt;">Coordinador de Atenci&oacute;n y Servicio al Alumno</span>
-        <br>
-        <span style="font-size: 11.0pt;">Direcci&oacute;n de Servicios Escolares</span>
-        <br>
-        <span style="font-size: 11.0pt;">Tecnol&oacute;gico de Monterrey, Monterrey, M&eacute;xico</span>
-    </p>
+    <div style="width:50%; float:left; height: 160">
+        <p>
+            <img src="images/firma.png" height="60">
+            <br>
+            <span style="font-size: 12.0pt;">Lic. Sylvia Alvarado Gonz&aacute;lez</span>
+            <br>
+            <span style="font-size: 11.0pt;">(sylvia.alvarado.gonzalez@tec.mx)</span>
+            <br>
+            <span style="font-size: 11.0pt;">Coordinador de Atenci&oacute;n y Servicio al Alumno</span>
+            <br>
+            <span style="font-size: 11.0pt;">Direcci&oacute;n de Servicios Escolares</span>
+            <br>
+            <span style="font-size: 11.0pt;">Tecnol&oacute;gico de Monterrey, Monterrey, M&eacute;xico</span>
+        </p>
+    </div>
+    
+    <!-- Sello -->
+    <div style="width:50%; float:left; height: 160">
+        <img src="images/sello.png" height="120">
+    </div>
     
     <!-- Datos Tec -->
     <p style="text-align: justify;">
