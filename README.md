@@ -26,7 +26,7 @@ Luis Rosales   | A01280221 | Product Owner Proxy
 
 ## Desarrollo
 
-Consideraciones: En todo momento una vez que sea clonado el repositorio y la instalacion del viertul enviroment este hecha. SIEMPRE se deve trabar con el virtual enviroment encendido.
+Consideraciones: En todo momento una vez que sea clonado el repositorio y la instalacion del virtual enviroment este hecha. SIEMPRE se deve trabar con el virtual enviroment encendido.
 
 ### Stack de Tecnologías
 
@@ -36,6 +36,18 @@ Back-End:
 
 Base de datos:
 * [MySQL](https://www.mysql.com) - Es un sistema de gestión de bases de datos relacional 
+
+### Requerimientos de la maquina
+Instalar cairo
+
+```sh
+$ brew install cairo
+```
+
+Instalar pango
+```sh
+$ brew install pango
+```
 
 ### Instalacion del Proyecto
 
@@ -74,6 +86,11 @@ $ pip install djangorestframework
 Instalar Django cors headers
 ```sh
 $ pip install django-cors-headers
+```
+
+Instalar weasyprint
+```sh
+$ pip install weasyprint
 ```
 
 Instalar PyMySQL

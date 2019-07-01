@@ -26,6 +26,11 @@ from django.db.models import Count, F
 from django.core.mail import send_mail
 from django.template import loader
 
+# New imports LBRL
+from werkzeug.utils import secure_filename
+from weasyprint import HTML
+from weasyprint.fonts import FontConfiguration
+
 EMAIL_REGEX = r"^(a|A)[0-9]{8}@(itesm.mx|tec.mx)$"
 
 #                                                           #Entrada: Nada ; Salida: Un archivo diccinario
@@ -590,3 +595,86 @@ def get_pasos_tramites(request):
     tra = Paso.objects.filter(proceso_id=args['id']).order_by('numero').values()
     tra = [dict(t) for t in tra]
     return JsonResponse(tra, safe=False)
+
+# New API functions LBRL
+
+# Helper funcitons
+def handle_uploaded_file(uploadedFile):
+    templateFolder = '/Users/luisrosales/Documents/School/Junio2019/ProyectoIntegrador/Desarrollo/Proyectos/SistemaDeTrazabilidad/Codigo/autoservicio-cartas-back/STTEAPI/templates/'
+    #templateFolder = '../templates/'
+    with open(templateFolder + uploadedFile.name , 'wb+') as destination:
+        for chunk in uploadedFile.chunks():
+            destination.write(chunk)
+
+# API functions
+@api_view(["POST"])
+# @permission_classes((IsAuthenticated, EsAdmin))
+def create_letter_template(request):
+
+    # Validate body parameters
+    args = PostParametersList(request)
+    args.check_parameter(key='id_admin', required=True)
+    args.check_parameter(key='descripcion', required=True)
+    # Save file to templates
+    uploadedFile = request.FILES['file']
+    handle_uploaded_file(uploadedFile)
+
+    args = args.__dict__()
+
+    ts = datetime.now().timestamp()
+
+    # Sumbmit created letter data to db
+    carta = Carta.objects.create(creado_por = args['id_admin'], nombre = uploadedFile.name, 
+        descripcion = args['descripcion'], fecha_creacion = ts, fecha_modificacion = ts, modificado_por = args['id_admin'])
+
+    return JsonResponse({'message': 'File uploaded successfully'})
+
+# Get letter
+@api_view(["GET"])
+def get_letters(request):
+    cartas = Carta.objects.all()
+    cartasJson = serializers.serialize('json',cartas)
+    #print(cartasJson)
+    
+    return HttpResponse(cartasJson, content_type='application/json')
+
+
+@api_view(["GET"])
+#@permission_classes((IsAuthenticated, EsAlumno | EsAdmin))
+def get_student_letter(request, id_alumno, id_carta):
+    # Get letter by id_carta
+    carta = Carta.objects.filter(id = id_carta)
+
+    # Get student by id_student 
+    alumno = Alumno.objects.filter(id=id_alumno)
+
+    # Calculated data
+    today = datetime.today()
+    # dd/mm/YY
+    current_date = today.strftime("%d/%m/%Y")
+
+    # Send parameters student data to letter
+    html = loader.render_to_string(carta[0].nombre, 
+        {
+            'name': alumno[0].nombre,
+            'last_name': alumno[0].apellido,            
+            'enrollment': alumno[0].matricula, 
+            'birthdate': alumno[0].fecha_de_nacimiento, 
+            'nationality': alumno[0].nacionalidad, 
+            'semester_initial_date': alumno[0].semestre_inicial, 
+            'semester_in_progress': alumno[0].semestre_en_progreso, 
+            'semester_goal': alumno[0].semestre_meta, 
+            'subjects_in_progress': alumno[0].materias_en_progreso, 
+            'career': alumno[0].carrera, 
+            'current_date' : current_date
+        })
+
+    # Create response
+    response = HttpResponse(content_type="application/pdf")
+    # Response: inline to open pdf reader on browser | attachment to dowload . 
+    response['Content-Disposition'] = 'inline; filename=output.pdf'
+
+    font_config = FontConfiguration()
+    HTML(string = html).write_pdf(response, font_config = font_config)
+
+    return response
