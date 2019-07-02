@@ -632,15 +632,30 @@ def create_letter_template(request):
 # Get letter
 @api_view(["GET"])
 def get_letters(request):
-    cartas = Carta.objects.all().values()
-    cartas = [dict(p) for p in cartas]
-    return JsonResponse(cartas, safe=False)
+    # cartas = Carta.objects.all().values()
+    # cartas = [dict(p) for p in cartas]
+    # return JsonResponse(cartas, safe=False)
+    from django.db import connection
+    cursor = connection.cursor()
+    cursor.execute('SELECT a.nombre as nombre_carta, a.descripcion, a.fecha_creacion, b.nombre '
+    + 'FROM Carta a INNER JOIN '
+    + 'Administrador b on a.creado_por = b.id')
+    tra = dictfetchall(cursor)
+    return JsonResponse(tra, safe=False)
 
 @api_view(["GET"])
 def get_students_letters(request):
-    cartas = CartaAlumno.objects.all().values()
-    cartas = [dict(p) for p in cartas]
-    return JsonResponse(cartas, safe=False)
+    # cartas = CartaAlumno.objects.all().values()
+    # cartas = [dict(p) for p in cartas]
+    # return JsonResponse(cartas, safe=False)
+    from django.db import connection
+    cursor = connection.cursor()
+    cursor.execute('SELECT a.matricula, a.nombre as nombre_alumno, a.apellido, c.nombre as nombre_carta, b.fecha_creacion '
+    + 'FROM Alumno a INNER JOIN '
+    + 'CartaAlumno b on a.id = b.id_alumno INNER JOIN '
+    + 'Carta c on c.id = b.id_carta')
+    tra = dictfetchall(cursor)
+    return JsonResponse(tra, safe=False)
 
 @api_view(["GET"])
 #@permission_classes((IsAuthenticated, EsAlumno | EsAdmin))
