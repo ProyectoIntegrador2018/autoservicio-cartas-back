@@ -632,12 +632,19 @@ def create_letter_template(request):
 # Get letter
 @api_view(["GET"])
 def get_letters(request):
+    cartas = Carta.objects.all().values()
+    print(cartas)
+    cartas = [dict(p) for p in cartas]
+    return JsonResponse(cartas, safe=False)
+
+@api_view(["GET"])
+def get_students_letters(request):
     cartas = Carta.objects.all()
     cartasJson = serializers.serialize('json',cartas)
     #print(cartasJson)
     
+    
     return HttpResponse(cartasJson, content_type='application/json')
-
 
 @api_view(["GET"])
 #@permission_classes((IsAuthenticated, EsAlumno | EsAdmin))

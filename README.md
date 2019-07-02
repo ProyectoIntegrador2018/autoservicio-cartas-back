@@ -93,6 +93,11 @@ Instalar weasyprint
 $ pip install weasyprint
 ```
 
+Instalar Werkzeug
+```sh
+$ pip install -U Werkzeug
+```
+
 Instalar PyMySQL
 ```sh
 $ pip install PyMySQL
