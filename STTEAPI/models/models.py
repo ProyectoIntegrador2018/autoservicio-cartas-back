@@ -104,15 +104,15 @@ class Carta(models.Model):
         managed = False
         db_table = 'Carta'
 
-# class CartaAlumno(models.Model):
-#   id_carta = models.ForeignKey(Administrador, models.DO_NOTHING, db_column = 'id_carta')
-#   id_alumno = models.ForeignKey(Administrador, models.DO_NOTHING, db_column = 'id_alumno')
-#   fecha_creacion = models.DateField(blank=True, null=True)
-#   fecha_modificacion = models.DateField(blank=True, null=True)
-#   creado_por = models.IntegerField(null=False, unique=True)
-#   modificado_por = models.IntegerField(null=False, unique=True)
+class CartaAlumno(models.Model):
+  id_carta = models.IntegerField(null=False, unique=True)
+  id_alumno = models.IntegerField(null=False, unique=True)
+  fecha_creacion = models.DateField(auto_now_add=True, blank=True, null=True)
+  fecha_modificacion = models.DateField(auto_now_add=True, blank=True, null=True)
+  creado_por = models.IntegerField(null=False, unique=True)
+  modificado_por = models.IntegerField(null=False, unique=True)
 
-#   class Meta:
-#       managed = False
-#       db_table = 'CartaAlumno'
+  class Meta:
+      managed = False
+      db_table = 'CartaAlumno'
 

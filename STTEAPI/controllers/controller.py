@@ -633,18 +633,14 @@ def create_letter_template(request):
 @api_view(["GET"])
 def get_letters(request):
     cartas = Carta.objects.all().values()
-    print(cartas)
     cartas = [dict(p) for p in cartas]
     return JsonResponse(cartas, safe=False)
 
 @api_view(["GET"])
 def get_students_letters(request):
-    cartas = Carta.objects.all()
-    cartasJson = serializers.serialize('json',cartas)
-    #print(cartasJson)
-    
-    
-    return HttpResponse(cartasJson, content_type='application/json')
+    cartas = CartaAlumno.objects.all().values()
+    cartas = [dict(p) for p in cartas]
+    return JsonResponse(cartas, safe=False)
 
 @api_view(["GET"])
 #@permission_classes((IsAuthenticated, EsAlumno | EsAdmin))
@@ -653,7 +649,7 @@ def get_student_letter(request, id_alumno, id_carta):
     carta = Carta.objects.filter(id = id_carta)
 
     # Get student by id_student 
-    alumno = Alumno.objects.filter(id=id_alumno)
+    alumno = Alumno.objects.filter(id = id_alumno)
 
     # Calculated data
     today = datetime.today()
@@ -675,6 +671,16 @@ def get_student_letter(request, id_alumno, id_carta):
             'career': alumno[0].carrera, 
             'current_date' : current_date
         })
+
+    # Create carta alumno
+    ts = datetime.now().timestamp()
+
+    CartaAlumno.objects.create(id_carta = id_carta,
+        id_alumno = id_alumno,
+        fecha_creacion = ts,
+        fecha_modificacion = ts,
+        creado_por = id_alumno,
+        modificado_por = id_alumno)
 
     # Create response
     response = HttpResponse(content_type="application/pdf")
