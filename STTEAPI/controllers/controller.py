@@ -163,13 +163,15 @@ def subir_documento(request):
     args.check_parameter(key='filename', required=True)
     args.check_parameter(key='content', required=True)
     admin = Administrador.objects.get(usuario=request.user)
-    doc = Documento.objects.create(nombre=args['filename'],contenido_subido=args['content'],admin=admin,
-                                   proceso_id=args['proceso'])
+    doc = Documento.objects.create(nombre=args['filename'], contenido_subido=args['content'], admin=admin,
+                                proceso_id=args['proceso'])
 
     contenido = json.loads(args['content'])
 
     print(contenido['data'])
     for c in contenido['data']:
+        print(c)
+
         fecha_1 = now()
         fecha_2 = now()
         if  c['fecha_apertura'] != None and c['fecha_apertura'] != "":
@@ -202,9 +204,10 @@ def subir_documento(request):
             tra.numero_paso_actual = p_ok
             tra.save()
         else:
-            tra = Tramitealumno.objects.create(matricula=c['matricula'], numero_ticket=c['ticket'],proceso_id=args['proceso'],
-                                           fecha_inicio=fecha_1, fecha_ultima_actualizacion=fecha_2, paso_actual=paso,
-                                               numero_paso_actual=p_ok)
+            tra = Tramitealumno.objects.create(matricula=c['matricula'], 
+            numero_ticket=c['ticket'],proceso_id=args['proceso'], 
+            fecha_inicio = fecha_1, fecha_ultima_actualizacion=fecha_2, 
+            paso_actual=paso, numero_paso_actual=p_ok)
 
     return JsonResponse(doc.id, safe=False)
 
@@ -325,7 +328,7 @@ def return_admin_list(request):
 @api_view(["GET"])
 @permission_classes((IsAuthenticated, EsAdmin))
 def return_student_list(request):
-    stu = Alumno.objects.select_related('usuario').values('id','nombre','apellido','usuario__id', email=F('usuario__email'), last_login=F('usuario__last_login'))
+    stu = Alumno.objects.select_related('usuario').values('id','nombre','usuario__id', email=F('usuario__email'), last_login=F('usuario__last_login'))
     stu = [dict(adm) for adm in stu]
     return JsonResponse(stu, safe=False)
 
@@ -598,6 +601,44 @@ def get_pasos_tramites(request):
 
 # New API functions LBRL
 
+# Database handler - Alumnos
+@api_view(["POST"])
+def upload_students(request):
+    args = PostParametersList(request)
+    args.check_parameter(key='content', required=True)
+    contenido = json.loads(args['content'])
+
+    print(contenido['data'])
+
+    alumnosJson = contenido['data']
+
+    for alumno in alumnosJson:
+        # Dando de alta información en la tabla de alumnos
+        counter = Alumno.objects.filter(matricula = alumno['Matricula']).count()
+        if counter == 0:
+            # Crear nuevo usuario en la base de datos
+            usuario = Usuario.objects.create(email = alumno['Email'], password = alumno['Contraseña'], is_staff=True, is_superuser=True, es_alumno=True)
+            # Crear nuevo alumno en la base de datos
+            Alumno.objects.create(nombre = alumno['Nombre'], usuario = usuario, matricula = alumno['Matricula'], siglas_carrera = alumno['Siglas Carrera'], carrera = alumno['Carrera'],  
+            semestre_en_progreso = alumno['Semestre en Progreso'], periodo_de_aceptacion = alumno['Periodo de Aceptacion'], 
+            posible_graduacion = alumno['Posible Graduacion'], fecha_de_nacimiento = alumno['Fecha de Nacimiento'], nacionalidad = alumno['Nacionalidad'])
+        else:
+            #Actualizar alumno existente
+            alumno = Alumno.objects.filter(matricula=['Matricula'])
+            alumno.nombre = alumno['Nombre']
+            alumno.siglas_carrera = alumno['Siglas Carrera']
+            alumno.carrera = alumno['Carrera']
+            alumno.semestre_en_progreso = alumno['Semestre en Progreso']
+            alumno.periodo_de_aceptacion = alumno['Periodo de Aceptacion']
+            alumno.posible_graduacion = alumno['Posible Graduacion']
+            alumno.fecha_de_nacimiento = alumno['Fecha de Nacimiento']
+            alumno.nacionalidad = alumno['Nacionalidad']
+            alumno.save 
+
+    return JsonResponse({'message': 'File uploaded successfully'})
+
+# Letters
+
 # Helper funcitons
 def handle_uploaded_file(uploadedFile):
     templateFolder = '/Users/luisrosales/Documents/School/Junio2019/ProyectoIntegrador/Desarrollo/Proyectos/SistemaDeTrazabilidad/Codigo/autoservicio-cartas-back/STTEAPI/templates/'
@@ -650,7 +691,7 @@ def get_students_letters(request):
     # return JsonResponse(cartas, safe=False)
     from django.db import connection
     cursor = connection.cursor()
-    cursor.execute('SELECT a.matricula, a.nombre as nombre_alumno, a.apellido, c.nombre as nombre_carta, b.fecha_creacion '
+    cursor.execute('SELECT a.matricula, a.nombre as nombre_alumno, c.nombre as nombre_carta, b.fecha_creacion '
     + 'FROM Alumno a INNER JOIN '
     + 'CartaAlumno b on a.id = b.id_alumno INNER JOIN '
     + 'Carta c on c.id = b.id_carta')
@@ -674,17 +715,16 @@ def get_student_letter(request, id_alumno, id_carta):
     # Send parameters student data to letter
     html = loader.render_to_string(carta[0].nombre, 
         {
-            'name': alumno[0].nombre,
-            'last_name': alumno[0].apellido,            
-            'enrollment': alumno[0].matricula, 
-            'birthdate': alumno[0].fecha_de_nacimiento, 
-            'nationality': alumno[0].nacionalidad, 
-            'semester_initial_date': alumno[0].semestre_inicial, 
-            'semester_in_progress': alumno[0].semestre_en_progreso, 
-            'semester_goal': alumno[0].semestre_meta, 
-            'subjects_in_progress': alumno[0].materias_en_progreso, 
-            'career': alumno[0].carrera, 
-            'current_date' : current_date
+            'nombre': alumno[0].nombre,
+            'matricula': alumno[0].matricula, 
+            'siglas_carrera': alumno[0].siglas_carrera, 
+            'carrera': alumno[0].carrera, 
+            'semestre_en_progreso': alumno[0].semestre_en_progreso, 
+            'periodo_de_aceptacion': alumno[0].periodo_de_aceptacion, 
+            'posible_graduacion': alumno[0].posible_graduacion, 
+            'fecha_de_nacimiento': alumno[0].fecha_de_nacimiento, 
+            'nacionalidad': alumno[0].nacionalidad, 
+            'fecha_actual' : current_date
         })
 
     # Create carta alumno

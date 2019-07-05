@@ -8,7 +8,6 @@
 from django.db import models
 from django.utils.timezone import now
 
-
 class Administrador(models.Model):
     nombre = models.CharField(max_length=100, blank=True, null=True)
     usuario = models.ForeignKey('Usuario', on_delete=models.CASCADE, db_column='usuario')
@@ -17,26 +16,22 @@ class Administrador(models.Model):
         managed = False
         db_table = 'Administrador'
 
-
 class Alumno(models.Model):
     nombre = models.CharField(max_length=100, blank=True, null=True)
-    apellido = models.CharField(max_length=100, blank=True, null=True)
-    # Added filed to Alumno LBRL
     matricula = models.CharField(max_length=100, blank=True, null=True)
+    siglas_carrera = models.CharField(max_length=100, blank=True, null=True)
+    carrera = models.CharField(max_length=100, blank=True, null=True)
+    semestre_en_progreso = models.CharField(max_length=100, blank=True, null=True)
+    periodo_de_aceptacion = models.CharField(max_length=100, blank=True, null=True)
+    posible_graduacion = models.CharField(max_length=100, blank=True, null=True)
     fecha_de_nacimiento = models.CharField(max_length=100, blank=True, null=True)
     nacionalidad = models.CharField(max_length=100, blank=True, null=True)
-    semestre_inicial = models.CharField(max_length=100, blank=True, null=True)
-    semestre_en_progreso = models.CharField(max_length=100, blank=True, null=True)
-    semestre_meta = models.CharField(max_length=100, blank=True, null=True)
-    materias_en_progreso = models.TextField(blank=True, null=True)
-    carrera = models.CharField(max_length=100, blank=True, null=True)
 
     usuario = models.ForeignKey('Usuario', on_delete=models.CASCADE, db_column='usuario')
 
     class Meta:
         managed = False
         db_table = 'Alumno'
-
 
 class Documento(models.Model):
     nombre = models.CharField(max_length=100, blank=True, null=True)
