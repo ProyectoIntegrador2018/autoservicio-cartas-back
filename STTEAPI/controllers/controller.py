@@ -678,9 +678,19 @@ def get_letters(request):
     # return JsonResponse(cartas, safe=False)
     from django.db import connection
     cursor = connection.cursor()
-    cursor.execute('SELECT a.nombre as nombre_carta, a.descripcion, a.fecha_creacion, b.nombre '
+    cursor.execute('SELECT a.id, a.nombre as nombre_carta, a.descripcion, a.fecha_creacion, b.nombre '
     + 'FROM Carta a INNER JOIN '
     + 'Administrador b on a.creado_por = b.id')
+    tra = dictfetchall(cursor)
+    return JsonResponse(tra, safe=False)
+
+# Get letter
+@api_view(["GET"])
+def get_students(request):
+    from django.db import connection
+    cursor = connection.cursor()
+    cursor.execute('SELECT a.id, a.matricula '
+    + 'FROM Alumno a')
     tra = dictfetchall(cursor)
     return JsonResponse(tra, safe=False)
 
@@ -740,7 +750,7 @@ def get_student_letter(request, id_alumno, id_carta):
     # Create response
     response = HttpResponse(content_type="application/pdf")
     # Response: inline to open pdf reader on browser | attachment to dowload . 
-    response['Content-Disposition'] = 'inline; filename=output.pdf'
+    response['Content-Disposition'] = 'attachment; filename=output.pdf'
 
     font_config = FontConfiguration()
     HTML(string = html).write_pdf(response, font_config = font_config)
