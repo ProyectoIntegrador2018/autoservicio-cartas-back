@@ -226,7 +226,7 @@ def login_admin(request):
     al = Administrador.objects.get(usuario=user)
     user.last_login = now()
     user.save()
-    return JsonResponse({'token': token.key, 'nombre': al.nombre, 'email': user.email }, safe=False)
+    return JsonResponse({'token': token.key, 'nombre': al.nombre, 'email': user.email, 'is_superuser': user.is_superuser}, safe=False)
 
 #                                                           #Entrada: Nada ; Salida: Nada
 #                                                           #Corrobora las credenciales del inicio de sesión del estudiante
@@ -624,16 +624,16 @@ def upload_students(request):
             posible_graduacion = alumno['Posible Graduacion'], fecha_de_nacimiento = alumno['Fecha de Nacimiento'], nacionalidad = alumno['Nacionalidad'])
         else:
             #Actualizar alumno existente
-            alumno = Alumno.objects.filter(matricula=['Matricula'])
-            alumno.nombre = alumno['Nombre']
-            alumno.siglas_carrera = alumno['Siglas Carrera']
-            alumno.carrera = alumno['Carrera']
-            alumno.semestre_en_progreso = alumno['Semestre en Progreso']
-            alumno.periodo_de_aceptacion = alumno['Periodo de Aceptacion']
-            alumno.posible_graduacion = alumno['Posible Graduacion']
-            alumno.fecha_de_nacimiento = alumno['Fecha de Nacimiento']
-            alumno.nacionalidad = alumno['Nacionalidad']
-            alumno.save 
+            alumno_db = Alumno.objects.filter(matricula = alumno['Matricula']).first()
+            alumno_db.nombre = alumno['Nombre']
+            alumno_db.siglas_carrera = alumno['Siglas Carrera']
+            alumno_db.carrera = alumno['Carrera']
+            alumno_db.semestre_en_progreso = alumno['Semestre en Progreso']
+            alumno_db.periodo_de_aceptacion = alumno['Periodo de Aceptacion']
+            alumno_db.posible_graduacion = alumno['Posible Graduacion']
+            alumno_db.fecha_de_nacimiento = alumno['Fecha de Nacimiento']
+            alumno_db.nacionalidad = alumno['Nacionalidad']
+            alumno_db.save()
 
     return JsonResponse({'message': 'File uploaded successfully'})
 
@@ -656,6 +656,10 @@ def create_letter_template(request):
     args = PostParametersList(request)
     args.check_parameter(key='id_admin', required=True)
     args.check_parameter(key='descripcion', required=True)
+
+    print(args['id_admin'])
+    print(args['descripcion'])
+
     # Save file to templates
     uploadedFile = request.FILES['file']
     handle_uploaded_file(uploadedFile)
@@ -670,12 +674,25 @@ def create_letter_template(request):
 
     return JsonResponse({'message': 'File uploaded successfully'})
 
+@api_view(["POST"])
+@permission_classes((IsAuthenticated, EsAdmin))
+def delete_letter_template(request):
+    args = PostParametersList(request)
+    args.check_parameter(key='cartas', required=True, is_json=True)
+    print(args['cartas'])
+    for p in args['cartas']:
+        try:
+            carta = Carta.objects.get(id=p['id'])
+            carta.delete()
+        except IntegrityError:
+            raise APIExceptions.PermissionDenied
+
+    return JsonResponse(1, safe=False)
+
 # Get letter
 @api_view(["GET"])
+@permission_classes((IsAuthenticated, EsAlumno | EsAdmin))
 def get_letters(request):
-    # cartas = Carta.objects.all().values()
-    # cartas = [dict(p) for p in cartas]
-    # return JsonResponse(cartas, safe=False)
     from django.db import connection
     cursor = connection.cursor()
     cursor.execute('SELECT a.id, a.nombre as nombre_carta, a.descripcion, a.fecha_creacion, b.nombre '
@@ -686,6 +703,7 @@ def get_letters(request):
 
 # Get letter
 @api_view(["GET"])
+@permission_classes((IsAuthenticated, EsAlumno | EsAdmin))
 def get_students(request):
     from django.db import connection
     cursor = connection.cursor()
@@ -695,6 +713,7 @@ def get_students(request):
     return JsonResponse(tra, safe=False)
 
 @api_view(["GET"])
+@permission_classes((IsAuthenticated, EsAlumno | EsAdmin))
 def get_students_letters(request):
     # cartas = CartaAlumno.objects.all().values()
     # cartas = [dict(p) for p in cartas]
@@ -709,7 +728,7 @@ def get_students_letters(request):
     return JsonResponse(tra, safe=False)
 
 @api_view(["GET"])
-#@permission_classes((IsAuthenticated, EsAlumno | EsAdmin))
+@permission_classes((IsAuthenticated, EsAlumno | EsAdmin))
 def get_student_letter(request, id_alumno, id_carta):
     # Get letter by id_carta
     carta = Carta.objects.filter(id = id_carta)
@@ -748,11 +767,9 @@ def get_student_letter(request, id_alumno, id_carta):
         modificado_por = id_alumno)
 
     # Create response
-    response = HttpResponse(content_type="application/pdf")
+    pdf_file = HTML(string = html).write_pdf()
+    response = HttpResponse(pdf_file, content_type="application/pdf")
     # Response: inline to open pdf reader on browser | attachment to dowload . 
-    response['Content-Disposition'] = 'attachment; filename=output.pdf'
-
-    font_config = FontConfiguration()
-    HTML(string = html).write_pdf(response, font_config = font_config)
+    response['Content-Disposition'] = 'filename=output.pdf'
 
     return response

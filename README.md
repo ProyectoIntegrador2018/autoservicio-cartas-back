@@ -78,6 +78,14 @@ Activar ambiente virtual
 $ source venv/bin/activate
 ```
 
+Instalar todas las dependencias automaticamente:
+
+```sh
+$ pip install -r requirements.txt
+```
+
+Instalar las dependencias manualmente:
+
 Instalar Django rest framework
 ```sh
 $ pip install djangorestframework
@@ -103,6 +111,14 @@ Instalar PyMySQL
 $ pip install PyMySQL
 ```
 
+Es sugerido actualizar las depencias con el siguiente commando:
+
+Guardar dependencias
+
+```sh
+$ pip freeze > requirements.txt
+```
+
 ### Ejecución del Proyecto
 
 Ejecucion de proyecto Back-End:
@@ -118,7 +134,8 @@ $ python manage.py runserver
 
 Pasos para lanzar proyecto mediante Elastic Beanstalk
 
-* Crear zip del proyecto
+* Crear zip del proyecto 
+* Si estas en mac limpiar zip - zip -d autoservicio-cartas-back.zip __MACOSX/\*
 * Acceder a la consola de aws
 * Seleccionar el servicio de Elastic Beanstalk
 * Subir zip dando click en boton "Upload and Deploy"
