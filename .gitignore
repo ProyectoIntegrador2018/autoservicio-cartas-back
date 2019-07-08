@@ -122,3 +122,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Extra
+.DS_Store
+.vscode
+package.zip
