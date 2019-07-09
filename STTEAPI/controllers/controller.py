@@ -728,7 +728,7 @@ def get_students_letters(request):
     return JsonResponse(tra, safe=False)
 
 @api_view(["GET"])
-@permission_classes((IsAuthenticated, EsAlumno | EsAdmin))
+# @permission_classes((IsAuthenticated, EsAlumno | EsAdmin))
 def get_student_letter(request, id_alumno, id_carta):
     # Get letter by id_carta
     carta = Carta.objects.filter(id = id_carta)
